@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: orderservice
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+resilience4j.circuitbreaker:
+  instances:
+    paymentServiceCircuitBreaker:
+      slidingWindowSize: 10
+      failureRateThreshold: 40
+      waitDurationInOpenState: 60s
+      permittedNumberOfCallsInHalfOpenState: 3
+      automaticTransitionFromOpenToHalfOpenEnabled: true
+      registerHealthIndicator: true
+
+logging:
+  level:
+    io.github.resilience4j.circuitbreaker: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+  metrics:
+    enable:
+      all: true
+  web:
+    base-path: /actuator
+
